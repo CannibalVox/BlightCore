@@ -20,4 +20,19 @@ public class BlockOceanNodesEditor implements IAsmEditor {
         method.instructions.insertBefore(firstInstruction, new InsnNode(RETURN));
         method.instructions.insertBefore(firstInstruction, returnToMethod);
     }
+
+    @Override
+    public String getClassName() {
+        return "thaumcraft.common.lib.world.ThaumcraftWorldGenerator";
+    }
+
+    @Override
+    public String getMethodName() {
+        return "createRandomNodeAt";
+    }
+
+    @Override
+    public String getMethodDesc() {
+        return "(Lnet/minecraft/world/World;IIILjava/util/Random;ZZZ)V";
+    }
 }

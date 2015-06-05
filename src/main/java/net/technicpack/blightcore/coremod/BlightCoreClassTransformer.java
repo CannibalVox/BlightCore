@@ -8,37 +8,44 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.objectweb.asm.Opcodes.*;
 
 public class BlightCoreClassTransformer implements IClassTransformer {
+
+    public BlightCoreClassTransformer() {
+    }
 
     @Override
     public byte[] transform(String s, String s1, byte[] bytes) {
         if (bytes == null)
             return null;
 
-        if (s1.equals("thaumcraft.common.lib.world.ThaumcraftWorldGenerator")) {
-            bytes = updateMethod(bytes, "createRandomNodeAt",
-                    "(Lnet/minecraft/world/World;IIILjava/util/Random;ZZZ)V",
-                    new BlockOceanNodesEditor());
-        } else if (s1.equals("thaumcraft.common.blocks.BlockTaintFibres")) {
-            bytes = updateMethod(bytes, "updateTick",
-                    "(Lnet/minecraft/world/World;IIILjava/util/Random;)V",
-                    new BlockTaintedSandEditor());
+        for (IAsmEditor editor : BlightCoreCoremod.editors) {
+            if (s1.equals(editor.getClassName()))
+                bytes = updateMethod(bytes, editor);
         }
+
         return bytes;
     }
 
-    private byte[] updateMethod(byte[] bytes, String name, String desc, IAsmEditor editor) {
+    private byte[] updateMethod(byte[] bytes, IAsmEditor editor) {
         ClassReader reader = new ClassReader(bytes);
         ClassNode node = new ClassNode(ASM5);
         reader.accept(node, 0);
 
+        boolean foundMethod = false;
         for (MethodNode method : node.methods) {
-            if (method.name.equals(name) && method.desc.equals(desc)) {
+            if (method.name.equals(editor.getMethodName()) && method.desc.equals(editor.getMethodDesc())) {
+                foundMethod = true;
                 editor.edit(method);
             }
         }
+
+        if (!foundMethod)
+            throw new RuntimeException("BlightCore failed to find a method named "+editor.getMethodName()+" in class "+editor.getClassName());
 
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         node.accept(writer);
