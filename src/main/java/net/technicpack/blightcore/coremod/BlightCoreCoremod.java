@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import net.technicpack.blightcore.coremod.asm.BlockOceanNodesEditor;
 import net.technicpack.blightcore.coremod.asm.BlockTaintedSandEditor;
+import net.technicpack.blightcore.coremod.asm.DeathsReduceRepEditor;
 import net.technicpack.blightcore.coremod.asm.IAsmEditor;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class BlightCoreCoremod implements IFMLLoadingPlugin {
         editors.clear();
         editors.add(new BlockOceanNodesEditor());
         editors.add(new BlockTaintedSandEditor(isObfuscated));
+        editors.add(new DeathsReduceRepEditor());
     }
 
     @Override
