@@ -10,7 +10,7 @@ import net.technicpack.blightcore.coremod.BlightCoreResourcePack;
 public class BlightCore extends DummyModContainer {
     public static final String MODID = "blightcore";
     public static final String MODNAME = "Blight Core";
-    public static final String VERSION = "1.1.0";
+    public static final String VERSION = "1.2.0";
 
     public BlightCore() {
         super(new ModMetadata());
